@@ -112,12 +112,12 @@ function addEmployee() {
     inquirer
       .prompt([
         {
-          name: "first_name",
+          name: "first",
           type: "input",
           message: "Please enter the employee's first name.",
         },
         {
-          name: "last_name",
+          name: "last",
           type: "input",
           message: "Please enter the employee's last name.",
         },
@@ -137,30 +137,26 @@ function addEmployee() {
             return roles;
           },
           message: "Please choose the employee's role.",
-        },
-      ])
-      .then(function (answer) {
-        let role_id;
-        for (let x = 0; x < answer.length; x++) {
-          if (answer[x].title == answer.role) {
-            role_id = answer[x].id;
-            console.log(role_id);
-          }
         }
-      }).then(function (answer) {
+    ])
+    .then((answer) => {
         connection.query(
-        "INSERT INTO employee SET ?", {
-            first_name: answer.first_name,
-            last_name: answer.last_name,
-            manager_id: answer.manager_id,
-            role_id: answer.role,
-        }
-      );
-      console.log("Employee added");
-      runPrompts();
+          "INSERT INTO employee SET ?",
+          {
+              first_name: answer.first,
+              last_name: answer.last,
+              manager_id: answer.manager_id,
+              role_id: answer.role,
+          },
+          function (err) {
+            if (err) throw err;
+            console.log("Employee added");
+            runPrompts();
+          })
+        });
   });
-})
 }
+
 // Add a Department
 function addDepartment() {
   inquirer
@@ -171,7 +167,7 @@ function addDepartment() {
         message: "Please enter the new department name.",
       },
     ])
-    .then(function (answer) {
+    .then((answer) => {
       connection.query(
         "INSERT INTO department VALUES (DEFAULT, ?)",
         [answer.newDepartment],
@@ -204,7 +200,7 @@ function addRole() {
         message: "Please enter the department ID for this role."
       }
     ])
-    .then(function (answer) {
+    .then((answer) => {
       connection.query(
         "INSERT INTO role SET ?",
         {
@@ -240,7 +236,7 @@ function updateEmployeeRole() {
           message: "Select the employee to update",
         },
       ])
-      .then(function (answer) {
+      .then((answer) => {
         const update = answer.allEmployees;
         connection.query("SELECT * FROM employee", function (error, answer) {
           if (error) throw error;
@@ -259,7 +255,7 @@ function updateEmployeeRole() {
                 message: "Select the employee's new role",
               },
             ])
-            .then(function (answer) {
+            .then((answer) => {
               connection.query("UPDATE employee VALUES ? WHERE last_name = ?", [
                 {
                   role_id: answer.role,

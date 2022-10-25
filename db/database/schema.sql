@@ -19,6 +19,10 @@ CREATE TABLE employee (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
-    role_id INT,
-    manager_id INT
+	manager_id INT,
+    role_id INT AUTO_INCREMENT
 );
+
+SELECT * FROM employee;
+
+

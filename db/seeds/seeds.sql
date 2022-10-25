@@ -15,7 +15,7 @@ VALUES
 ('Accountant', '120000', 4),
 ('Lawyer', '180000', 5);
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, manager_id, role_id)
 VALUES 
 ('Lukas', 'Horner', 1, null),
 ('Saoirse', 'West', 2, 1),
@@ -23,3 +23,6 @@ VALUES
 ('Luis', 'Herman', 4, 2),
 ('Mischa', 'Henson', 5, 2),
 ('Byron', 'Riggs', 6, 1);
+
+SELECT * FROM employee;
+

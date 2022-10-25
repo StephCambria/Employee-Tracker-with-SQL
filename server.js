@@ -133,6 +133,7 @@ function addEmployee() {
             let roles = [];
             for (let i = 0; i < answer.length; i++) {
               roles.push(answer[i].title);
+              roles.push(answer[i].id);
             }
             return roles;
           },

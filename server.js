@@ -112,42 +112,60 @@ function addEmployee() {
     inquirer
       .prompt([
         {
-          name: "first",
+          name: "first_name",
           type: "input",
           message: "Please enter the employee's first name.",
         },
         {
-          name: "last",
+          name: "last_name",
           type: "input",
           message: "Please enter the employee's last name.",
+        },
+        {
+          name: "title",
+          type: "list",
+          choices: function () {
+            let roles = [];
+            for (let i = 0; i < answer.length; i++) {
+              roles.push(answer[i].title);
+            }
+            return roles;
+          },
+          message: "Please choose the employee's role.",
+        },
+        {
+          name: "department_id",
+          type: "list",
+          choices: function () {
+            let departments = [];
+            for (let i = 0; i < answer.length; i++) {
+              departments.push(answer[i].department_id);
+            }
+            return departments;
+          },
+          message: "Please choose the employee's department.",
+        },
+        {
+          name: "salary",
+          type: "number",
+          message: "Please enter the salary for this role."
         },
         {
           name: "manager_id",
           type: "number",
           message: "Please enter the employee's manager's ID.",
         },
-        {
-          name: "role",
-          type: "list",
-          choices: function () {
-            let roles = [];
-            for (let i = 0; i < answer.length; i++) {
-              roles.push(answer[i].title);
-              roles.push(answer[i].id);
-            }
-            return roles;
-          },
-          message: "Please choose the employee's role.",
-        }
     ])
     .then((answer) => {
         connection.query(
           "INSERT INTO employee SET ?",
           {
-              first_name: answer.first,
-              last_name: answer.last,
-              manager_id: answer.manager_id,
-              role_id: answer.role,
+              first_name: answer.first_name,
+              last_name: answer.last_name,
+              title: answer.title,
+              department_id: answer.department_id,
+              salary: answer.salary,
+              manager_id: answer.manager_id
           },
           function (err) {
             if (err) throw err;
@@ -226,7 +244,7 @@ function updateEmployeeRole() {
       .prompt([
         {
           name: "allEmployees",
-          type: "list",
+          type: "rawlist",
           choices: function () {
             let employeeArray = [];
             for (i = 0; i < answer.length; i++) {

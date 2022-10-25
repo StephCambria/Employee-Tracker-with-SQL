@@ -20,12 +20,17 @@ CREATE TABLE employee (
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     title VARCHAR(30),
-    department VARCHAR(30),
+    department_id INT,
     salary DECIMAL,
 	manager_id INT
 );
 
 SELECT * FROM employee;
+
+DROP TABLE employee;
+
+DELETE FROM employee
+WHERE id = 7;
 
 
 

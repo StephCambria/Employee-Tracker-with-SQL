@@ -22,11 +22,12 @@ CREATE TABLE employee (
     title VARCHAR(30),
     department VARCHAR(30),
     salary DECIMAL,
-	manager_id INT,
-    role_id INT
+	manager_id INT
 );
 
 SELECT * FROM employee;
+
+
 
 
 

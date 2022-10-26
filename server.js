@@ -74,8 +74,7 @@ function runPrompts() {
 
 // View Employees
 function viewEmployees() {
-  let query = "SELECT * FROM employee";
-  connection.query(query, function (err, answer) {
+  connection.query("SELECT e.employee_id, e.first_name, e.last_name, role.title, department.department_name, role.salary, CONCAT(m.last_name) manager FROM employee m RIGHT JOIN employee e ON e.manager_id = m.employee_id JOIN role ON e.role_id = role.role_id JOIN department ON department.department_id = role.department_id ORDER BY e.employee_id ASC", (err, answer) => {
     if (err) throw err;
     console.log("Viewing all employees");
     console.table(answer);

@@ -15,12 +15,14 @@ VALUES
 ('Accountant', '120000', 4),
 ('Lawyer', '180000', 5);
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
+INSERT INTO employee (first_name, last_name, role_id, title, manager_id)
 VALUES 
-('Lukas', 'Horner', 1, null),
-('Saoirse', 'West', 2, 1),
-('Juno', 'Lozano', 3, 1),
-('Luis', 'Herman', 4, 2),
-('Mischa', 'Henson', 5, 2),
-('Byron', 'Riggs', 6, 1);
+('Lukas', 'Horner', 1, "CEO", null),
+('Saoirse', 'West', 2, "Sales Lead", 1),
+('Juno', 'Lozano', 3, "Lead Engineer", 1),
+('Luis', 'Herman', 4, "Web Developer", 2),
+('Mischa', 'Henson', 5, "Accountant", 2),
+('Byron', 'Riggs', 6, "Lawyer", 1);
 
+
+SELECT * FROM employee;

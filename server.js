@@ -249,7 +249,58 @@ function addRole() {
 
 // Update an Employee's Role
 function updateEmployeeRole() {
+  let all_employees = [];
+  connection.query(
+    "SELECT first_name, last_name FROM employee",
+    (err, answer) => {
+      if (err) throw err;
+      answer.forEach((element) => {
+        all_employees.push(`${element.first_name} ${element.last_name}`);
+        inquirer
+          .prompt([
+            {
+              name: "updateEmployee",
+              type: "list",
+              message: "Select the employee to update",
+              choices: all_employees,
+            },
+          ])
+          .then((answer) => {
+            const employeeUpdate = answer.updateEmployee;
 
+            let all_roles = [];
+            connection.query("SELECT title FROM role", (err, answer) => {
+              if (err) throw err;
+              answer.forEach((element) => {
+                all_roles.push(`${element.title}`);
+                inquirer
+                  .prompt([
+                    {
+                      name: "updateRole",
+                      type: "list",
+                      message: "Select the employee's new role",
+                      choices: all_roles,
+                    },
+                  ])
+                  .then((answer) => {
+                    connection.query(
+                      "UPDATE employee SET ? WHERE last_name = ?",
+                      [
+                        {
+                          title: answer.updateRole,
+                        },
+                        employeeUpdate,
+                      ]
+                    );
+                    console.log("Employee information updated");
+                    runPrompts();
+                  });
+              });
+            });
+          });
+      });
+    }
+  );
 }
 
 // Nothing

@@ -26,3 +26,6 @@ VALUES
 
 
 SELECT * FROM employee;
+
+DELETE FROM employee
+WHERE employee_id = 7;

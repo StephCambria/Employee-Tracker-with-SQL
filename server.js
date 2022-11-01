@@ -247,63 +247,56 @@ function addRole() {
   });
 }
 
+
 // Update an Employee's Role
 function updateEmployeeRole() {
-  let all_employees = [];
-  connection.query(
-    "SELECT first_name, last_name FROM employee",
-    (err, answer) => {
+  connection.query(`SELECT CONCAT (first_name," ",last_name) AS full_name FROM employee`, function (err, answer) {
+    if (err) throw err;
+    let employees = answer.map((employee) => ({
+      name: employee.full_name,
+      value: employee.employee_id,
+    }));
+    connection.query("SELECT * FROM role", (err, answer) => {
       if (err) throw err;
-      answer.forEach((element) => {
-        all_employees.push(`${element.first_name} ${element.last_name}`);
-        inquirer
-          .prompt([
+      let roles = answer.map((role) => ({
+        name: role.title,
+        value: role.role_id,
+      }));
+      inquirer
+        .prompt([
+          {
+            name: "name",
+            type: "list",
+            message: "Which employee should be updated?",
+            choices: employees,
+          },
+          {
+            name: "role",
+            type: "list",
+            message: "What is the employee's new role?",
+            choices: roles,
+          },
+        ])
+        .then((answer) => {
+          connection.query(
+            "INSERT INTO employee SET ?",
             {
-              name: "updateEmployee",
-              type: "list",
-              message: "Select the employee to update",
-              choices: all_employees,
+              role_id: answer.role,
             },
-          ])
-          .then((answer) => {
-            const employeeUpdate = answer.updateEmployee;
-
-            let all_roles = [];
-            connection.query("SELECT title FROM role", (err, answer) => {
+            (err) => {
               if (err) throw err;
-              answer.forEach((element) => {
-                all_roles.push(`${element.title}`);
-                inquirer
-                  .prompt([
-                    {
-                      name: "updateRole",
-                      type: "list",
-                      message: "Select the employee's new role",
-                      choices: all_roles,
-                    },
-                  ])
-                  .then((answer) => {
-                    connection.query(
-                      "UPDATE employee SET ? WHERE last_name = ?",
-                      [
-                        {
-                          title: answer.updateRole,
-                        },
-                        employeeUpdate,
-                      ]
-                    );
-                    console.log("Employee information updated");
-                    runPrompts();
-                  });
-              });
-            });
-          });
-      });
-    }
-  );
+              console.log("Employee added");
+              runPrompts();
+            }
+          );
+        });
+    });
+  });
 }
+
+  
 
 // Nothing
 function exit() {
-  connection.end();
+
 }

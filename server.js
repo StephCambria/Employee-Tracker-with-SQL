@@ -132,6 +132,7 @@ function viewRoles() {
   });
 }
 
+
 // Add an Employee
 function addEmployee() {
   // Selecting all data from the role table.

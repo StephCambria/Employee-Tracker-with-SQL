@@ -285,75 +285,62 @@ function addRole() {
 // I ended up re-writing the functionality above a handful of times until I settled on the map function,
 // as it was the cleanest for me to write and returned the best results.
 
-// However, when I tried using that same method below to update employee information, I ran into countless bugs.
-// For example, when I would try to tell the data where to go in the employee table (such as the new role), it WOULD go to the correct row,
-// but it would also update that same row for every employee's role || if I tried to update an employee's role to accountant, for instance,
-// it would make every employee's role accountant.
-// When I specified to use employee IDs instead of names, my returned lists would only consist of numbers.
-
-// Ultimately, I switched to a for loop for ease of access, even though it's not the cleanest practice.
-
 // Update an Employee's Role
 function updateEmployeeRole() {
   // Selecting all of the data in the employee table.
-  connection.query("SELECT * FROM employee", function (err, answer) {
+  connection.query("SELECT * FROM employee", (err, answer) => {
+    // Using that same map function here.
     if (err) throw err;
+    let employees = answer.map((employee) => ({
+      // Same idea below.
+      name: employee.last_name,
+      value: employee.employee_id,
+    }));
     inquirer
       .prompt([
         {
           name: "employeeUpdate",
           type: "list",
-          choices: function () {
-            // Using a for loop to generate a list of all of the employee's last names.
-            let employeeArray = [];
-            for (i = 0; i < answer.length; i++) {
-              employeeArray.push(answer[i].last_name); // Here is where the loop is told to only return the values in the last_name row.
-            }
-            return employeeArray;
-          },
           message: "Which employee should be updated?",
+          choices: employees,
         },
       ])
       .then(function (answer) {
         const employeeUpdate = answer.employeeUpdate; // Saving the employee name to update for later in the process.
 
         connection.query("SELECT * FROM role", function (err, answer) {
+          // Using the map function to find specific information from the table.
           if (err) throw err;
+          let roles = answer.map((role) => ({
+            // Getting the specific data we're looking for.
+            name: role.role_title,
+            value: role.role_title,
+          }));
           inquirer
             .prompt([
               {
                 name: "roleUpdate",
                 type: "list",
-                choices: function () {
-                  // Using the same for loop to return a list of all role titles in the database
-                  var roleArray = [];
-                  for (i = 0; i < answer.length; i++) {
-                    roleArray.push(answer[i].role_title); // Rendering the role IDs as a list.
-                  }
-                  return roleArray;
-                },
                 message: "What is the employee's new role title?",
+                choices: roles,
               },
               {
                 name: "idUpdate",
-                type: "number",
-                validate: function (value) {
-                  // Making it so users can only input a number
-                  if (isNaN(value) === false) {
-                    return true;
+                type: "list",
+                choices: function () {
+                  // Using the same for loop to return a list of all role IDs in the database
+                  var roleArray = [];
+                  for (i = 0; i < answer.length; i++) {
+                    roleArray.push(answer[i].role_id); // Rendering the role IDs as a list.
                   }
-                  return false;
+                  return roleArray;
                 },
-                // In the role table, role_id is set to auto increment, but it is not set to auto increment in the employee table.
-                // This is because only one integer value can be set to auto increment in every MySQL table.
-                // Because the table information will not update correctly (or at all) without an ID,
-                // I am adding this input to keep the user experience simple.
                 message: "What is the employee's new role ID?",
               },
             ])
             .then(function (answer) {
               // We are changing the role, not the employee, so we specify to make the changes AT the specific employee's row, but not to the actual employee.
-              connection.query("UPDATE employee SET ? WHERE last_name = ?", [
+              connection.query("UPDATE employee SET ? WHERE employee_id = ?", [
                 {
                   role_title: answer.roleUpdate, // Telling the updated title where to go.
                   role_id: answer.idUpdate, // Telling the updated ID where to go.

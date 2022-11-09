@@ -132,7 +132,6 @@ function viewRoles() {
   });
 }
 
-
 // Add an Employee
 function addEmployee() {
   // Selecting all data from the role table.
@@ -295,7 +294,7 @@ function updateEmployeeRole() {
       // Same idea below.
       name: employee.last_name,
       value: employee.employee_id,
-    }));
+    })); // In the terminal, the "Nothing" message pops up if this function is selected, but the function still runs. I assume this is because I've separated the connection queries.
     inquirer
       .prompt([
         {
@@ -328,7 +327,7 @@ function updateEmployeeRole() {
                 name: "idUpdate",
                 type: "list",
                 choices: function () {
-                  // Using the same for loop to return a list of all role IDs in the database
+                  // Using a for loop to return a list of all role IDs in the database
                   var roleArray = [];
                   for (i = 0; i < answer.length; i++) {
                     roleArray.push(answer[i].role_id); // Rendering the role IDs as a list.

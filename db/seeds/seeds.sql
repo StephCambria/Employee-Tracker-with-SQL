@@ -23,9 +23,3 @@ VALUES
 ('Luis', 'Herman', 4, "Web Developer", 3),
 ('Mischa', 'Henson', 5, "Accountant", 2),
 ('Byron', 'Riggs', 6, "Lawyer", 1);
-
-
-SELECT * FROM employee;
-
-DELETE FROM employee
-WHERE employee_id = 7;
